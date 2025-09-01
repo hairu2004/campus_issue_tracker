@@ -82,4 +82,42 @@ router.get('/profile', verifyToken, async (req, res) => {
   }
 });
 
+// ✅ Google Login Route
+router.post('/google', async (req, res) => {
+  try {
+    const { email, name, googleId } = req.body;
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = new User({
+        name,
+        email,
+        password: googleId, // or a random string
+        role: 'student',
+        isGoogleUser: true
+      });
+      await user.save();
+    }
+
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.status(200).json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Google login failed', error: err.message });
+  }
+});
+
 module.exports = router;

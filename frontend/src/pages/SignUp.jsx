@@ -19,7 +19,6 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const { name, email, password, confirmPassword } = formData;
 
     if (!name || !email || !password || !confirmPassword) {
@@ -37,7 +36,7 @@ const SignUp = () => {
         name,
         email,
         password,
-        role: "student", // ✅ default role
+        role: "student",
       });
 
       toast.success("Account created! Please log in.");
@@ -49,48 +48,70 @@ const SignUp = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow">
-      <h2 className="text-2xl font-bold mb-4 text-green-700">Create an Account</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="name"
-          placeholder="Full Name"
-          className="w-full p-2 border rounded"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 border rounded"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 border rounded"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="confirmPassword"
-          type="password"
-          placeholder="Confirm Password"
-          className="w-full p-2 border rounded"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit" className="w-full bg-green-600 text-white py-2 rounded">
-          Sign Up
-        </button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-stone-100 via-zinc-100 to-slate-200 px-4">
+      <div className="w-full max-w-md bg-white/80 backdrop-blur-md rounded-xl shadow-xl p-8">
+        <h2 className="text-3xl font-bold text-center text-neutral-700 mb-6">Create an Account</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+            <input
+              name="name"
+              placeholder="Your name"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lime-400"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+            <input
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lime-400"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+            <input
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lime-400"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Confirm Password</label>
+            <input
+              name="confirmPassword"
+              type="password"
+              placeholder="••••••••"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lime-400"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-lime-500 to-green-400 hover:from-lime-600 hover:to-green-500 text-white font-semibold py-2 rounded-full transition duration-200"
+          >
+            Sign Up
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

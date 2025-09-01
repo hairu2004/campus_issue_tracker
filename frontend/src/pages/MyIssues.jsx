@@ -13,7 +13,7 @@ const MyIssues = () => {
         const res = await axios.get("/issues", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setIssues(res.data.issues); // ✅ Fix applied here
+        setIssues(res.data.issues);
       } catch (err) {
         toast.error("Failed to load issues");
         console.error(err);
@@ -24,29 +24,47 @@ const MyIssues = () => {
   }, [token]);
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6">
-      <h2 className="text-2xl font-bold mb-4">My Reported Issues</h2>
-      {issues.length === 0 ? (
-        <p className="text-gray-600">No issues submitted yet.</p>
-      ) : (
-        <div className="space-y-4">
-          {issues.map((issue) => (
-            <div key={issue._id} className="border p-4 rounded shadow">
-              <h3 className="text-lg font-semibold">{issue.title}</h3>
-              <p className="text-sm text-gray-700">{issue.description}</p>
-              <p className="text-sm text-blue-600">Category: {issue.category}</p>
-              <p className="text-sm text-green-600">Status: {issue.status}</p>
-              {issue.imageUrl && (
-                <img
-                  src={`http://localhost:5000/uploads/${issue.imageUrl}`}
-                  alt="Issue"
-                  className="mt-2 w-40 rounded"
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+    <div className="min-h-screen bg-gradient-to-br from-stone-100 via-zinc-100 to-slate-200 px-4 py-10">
+      <div className="max-w-5xl mx-auto space-y-10">
+        <h2 className="text-3xl font-bold text-neutral-700 text-center">My Reported Issues</h2>
+
+        {issues.length === 0 ? (
+          <p className="text-slate-500 text-center text-lg">
+            You haven’t submitted any issues yet.
+          </p>
+        ) : (
+          <div className="space-y-6">
+            {issues.map((issue) => (
+              <div
+                key={issue._id}
+                className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"
+              >
+                <h3 className="text-xl font-semibold text-slate-800">{issue.title}</h3>
+                <p className="text-sm text-slate-600 mt-1">{issue.description}</p>
+                <div className="mt-2 flex justify-between text-sm">
+                  <span className="text-violet-500">Category: {issue.category}</span>
+                  <span
+                    className={`font-medium ${
+                      issue.status === "resolved"
+                        ? "text-lime-600"
+                        : "text-amber-500"
+                    }`}
+                  >
+                    Status: {issue.status}
+                  </span>
+                </div>
+                {issue.imageUrl && (
+                  <img
+                    src={`http://localhost:5000/uploads/${issue.imageUrl}`}
+                    alt="Issue"
+                    className="mt-4 w-48 rounded-lg shadow"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

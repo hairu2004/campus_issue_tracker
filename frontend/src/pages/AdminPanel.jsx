@@ -48,7 +48,6 @@ const AdminPanel = () => {
 
   const handleEdit = async (issue) => {
     const allowedCategories = ["infrastructure", "academics", "hostel"];
-
     const newTitle = prompt("Edit title:", issue.title)?.trim();
     const newDescription = prompt("Edit description:", issue.description)?.trim();
     const newCategory = prompt("Edit category (infrastructure, academics, hostel):", issue.category)?.toLowerCase();
@@ -107,101 +106,109 @@ const AdminPanel = () => {
   });
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 p-6">
-      <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
+    <div className="min-h-screen bg-gradient-to-br from-stone-100 via-zinc-100 to-slate-200 px-4 py-10">
+      <div className="max-w-6xl mx-auto space-y-10">
+        <h2 className="text-3xl font-bold text-neutral-700 text-center">Admin Dashboard</h2>
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search by title or description"
-          className="p-2 border rounded w-full sm:w-1/2"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <select
-          className="p-2 border rounded"
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-        >
-          <option value="all">All Categories</option>
-          <option value="infrastructure">Infrastructure</option>
-          <option value="academics">Academics</option>
-          <option value="hostel">Hostel</option>
-        </select>
-        <select
-          className="p-2 border rounded"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="all">All Statuses</option>
-          <option value="pending">Pending</option>
-          <option value="resolved">Resolved</option>
-        </select>
-      </div>
-
-      {/* Issue List */}
-      {filteredIssues.length === 0 ? (
-        <p className="text-gray-600">No matching issues found.</p>
-      ) : (
-        <div className="space-y-4">
-          {filteredIssues.map((issue) => (
-            <div key={issue._id} className="border p-4 rounded shadow">
-              <h3 className="text-lg font-semibold">{issue.title}</h3>
-              <p className="text-sm text-gray-700">{issue.description}</p>
-              <p className="text-sm text-blue-600">Category: {issue.category}</p>
-              <p className="text-sm text-green-600">Status: {issue.status}</p>
-              {issue.imageUrl && (
-                <img
-                  src={`http://localhost:5000/uploads/${issue.imageUrl}`}
-                  alt="Issue"
-                  className="mt-2 w-40 rounded"
-                />
-              )}
-              <div className="mt-2 space-x-2">
-                {issue.status !== "resolved" && (
-                  <button
-                    onClick={() => markResolved(issue._id)}
-                    className="bg-green-600 text-white px-4 py-1 rounded"
-                  >
-                    Mark as Resolved
-                  </button>
-                )}
-                <button
-                  onClick={() => handleEdit(issue)}
-                  className="bg-yellow-500 text-white px-4 py-1 rounded"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(issue._id)}
-                  className="bg-red-600 text-white px-4 py-1 rounded"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
+        {/* Filters */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <input
+            type="text"
+            placeholder="Search by title or description"
+            className="px-4 py-2 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <select
+            className="px-4 py-2 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+          >
+            <option value="all">All Categories</option>
+            <option value="infrastructure">Infrastructure</option>
+            <option value="academics">Academics</option>
+            <option value="hostel">Hostel</option>
+          </select>
+          <select
+            className="px-4 py-2 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="resolved">Resolved</option>
+          </select>
         </div>
-      )}
 
-      {/* Pagination Controls */}
-      <div className="flex justify-center mt-6 space-x-4">
-        <button
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={page === 1}
-          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <span className="px-4 py-2">Page {page} of {totalPages}</span>
-        <button
-          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={page === totalPages}
-          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
-        >
-          Next
-        </button>
+        {/* Issue List */}
+        {filteredIssues.length === 0 ? (
+          <p className="text-neutral-500 text-center">No matching issues found.</p>
+        ) : (
+          <div className="space-y-6">
+            {filteredIssues.map((issue) => (
+              <div key={issue._id} className="bg-white rounded-xl shadow-md p-6">
+                <h3 className="text-xl font-semibold text-slate-800">{issue.title}</h3>
+                <p className="text-sm text-slate-600 mt-1">{issue.description}</p>
+                <div className="mt-2 flex justify-between text-sm">
+                  <span className="text-indigo-500">Category: {issue.category}</span>
+                  <span className={`font-medium ${issue.status === "resolved" ? "text-emerald-500" : "text-amber-500"}`}>
+                    Status: {issue.status}
+                  </span>
+                </div>
+                {issue.imageUrl && (
+                  <img
+                    src={`http://localhost:5000/uploads/${issue.imageUrl}`}
+                    alt="Issue"
+                    className="mt-4 w-48 rounded-lg shadow"
+                  />
+                )}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {issue.status !== "resolved" && (
+                    <button
+                      onClick={() => markResolved(issue._id)}
+                      className="bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-600 hover:to-teal-500 text-white px-4 py-2 rounded-full transition"
+                    >
+                      Mark as Resolved
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleEdit(issue)}
+                    className="bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-600 hover:to-yellow-500 text-white px-4 py-2 rounded-full transition"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(issue._id)}
+                    className="bg-gradient-to-r from-neutral-600 to-slate-700 hover:from-neutral-700 hover:to-slate-800 text-white px-4 py-2 rounded-full transition"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center items-center gap-4">
+          <button
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            disabled={page === 1}
+            className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg disabled:opacity-50 transition"
+          >
+            Previous
+          </button>
+          <span className="text-sm font-medium text-slate-700">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={page === totalPages}
+            className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg disabled:opacity-50 transition"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

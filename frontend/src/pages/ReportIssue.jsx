@@ -15,7 +15,6 @@ const ReportIssue = () => {
   });
   const [location, setLocation] = useState(null);
 
-  // ✅ Auto-detect location on mount
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -79,64 +78,89 @@ const ReportIssue = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 border rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Report an Issue</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="title"
-          placeholder="Title"
-          className="w-full p-2 border rounded"
-          value={formData.title}
-          onChange={handleChange}
-          required
-        />
-        <textarea
-          name="description"
-          placeholder="Description"
-          className="w-full p-2 border rounded"
-          value={formData.description}
-          onChange={handleChange}
-          required
-        />
-        <select
-          name="category"
-          className="w-full p-2 border rounded"
-          value={formData.category}
-          onChange={handleChange}
-        >
-          <option value="infrastructure">Infrastructure</option>
-          <option value="academics">Academics</option>
-          <option value="hostel">Hostel</option>
-        </select>
-        <input
-          type="file"
-          name="image"
-          className="w-full p-2 border rounded"
-          onChange={handleChange}
-        />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-stone-100 via-zinc-100 to-slate-200 px-4 py-10">
+      <div className="w-full max-w-2xl bg-white/80 backdrop-blur-md rounded-xl shadow-xl p-8 space-y-8">
+        <h2 className="text-3xl font-bold text-neutral-700 text-center">Report an Issue</h2>
 
-        {/* Auto-detected Location Preview */}
-        <div>
-          <label className="block font-semibold mb-1">Your Location:</label>
-          {location ? (
-            <>
-              <MapContainer center={[location.lat, location.lng]} zoom={16} style={{ height: "300px" }}>
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <Marker position={[location.lat, location.lng]} />
-              </MapContainer>
-              <p className="text-sm mt-2 text-gray-600">
-                Auto-detected: {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
-              </p>
-            </>
-          ) : (
-            <p className="text-sm text-gray-500">Detecting location...</p>
-          )}
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-neutral-600 mb-1">Title</label>
+            <input
+              name="title"
+              placeholder="Issue title"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-400"
+              value={formData.title}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <button type="submit" className="w-full bg-green-600 text-white py-2 rounded">
-          Submit
-        </button>
-      </form>
+          <div>
+            <label className="block text-sm font-medium text-neutral-600 mb-1">Description</label>
+            <textarea
+              name="description"
+              placeholder="Describe the issue"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-400"
+              value={formData.description}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-neutral-600 mb-1">Category</label>
+            <select
+              name="category"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-400"
+              value={formData.category}
+              onChange={handleChange}
+            >
+              <option value="infrastructure">Infrastructure</option>
+              <option value="academics">Academics</option>
+              <option value="hostel">Hostel</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-neutral-600 mb-1">Upload Image</label>
+            <input
+              type="file"
+              name="image"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-neutral-600 mb-2">Your Location</label>
+            {location ? (
+              <>
+                <MapContainer
+                  center={[location.lat, location.lng]}
+                  zoom={16}
+                  style={{ height: "300px" }}
+                  className="rounded-xl overflow-hidden shadow-md"
+                >
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  <Marker position={[location.lat, location.lng]} />
+                </MapContainer>
+                <p className="text-sm mt-2 text-neutral-500">
+                  Auto-detected: {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-neutral-400">Detecting location...</p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-600 hover:to-yellow-500 text-white font-semibold py-2 rounded-full transition duration-200"
+          >
+            Submit Issue
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

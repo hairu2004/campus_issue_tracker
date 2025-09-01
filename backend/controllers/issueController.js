@@ -1,4 +1,5 @@
 const Issue = require('../models/Issue');
+const User = require('../models/User');
 
 // Create a new issue
 const createIssue = async (req, res) => {
@@ -14,7 +15,7 @@ const createIssue = async (req, res) => {
       studentId: req.user.userId,
       status: 'pending',
       notified: false,
-      location: lat && lng ? { lat: parseFloat(lat), lng: parseFloat(lng) } : undefined // ✅ FIXED
+      location: lat && lng ? { lat: parseFloat(lat), lng: parseFloat(lng) } : undefined
     });
 
     await issue.save();

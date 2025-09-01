@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import axios from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import { Bar, Pie } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
@@ -25,7 +33,12 @@ const AnalyticsDashboard = () => {
     fetchStats();
   }, [token]);
 
-  if (!stats) return <p className="text-center mt-10">Loading analytics...</p>;
+  if (!stats)
+    return (
+      <p className="text-center mt-20 text-neutral-500 text-lg font-medium">
+        Loading analytics...
+      </p>
+    );
 
   const categoryData = {
     labels: stats.categoryStats.map((c) => c._id),
@@ -33,7 +46,7 @@ const AnalyticsDashboard = () => {
       {
         label: "Issues per Category",
         data: stats.categoryStats.map((c) => c.count),
-        backgroundColor: ["#3b82f6", "#10b981", "#f59e0b"],
+        backgroundColor: ["#fbbf24", "#a78bfa", "#94a3b8"], // amber, violet, slate
       },
     ],
   };
@@ -44,7 +57,7 @@ const AnalyticsDashboard = () => {
       {
         label: "Issue Status",
         data: stats.statusStats.map((s) => s.count),
-        backgroundColor: ["#f87171", "#34d399"],
+        backgroundColor: ["#facc15", "#60a5fa"], // yellow, sky
       },
     ],
   };
@@ -55,28 +68,30 @@ const AnalyticsDashboard = () => {
       {
         label: "Issues per Month",
         data: stats.monthlyStats.map((m) => m.count),
-        backgroundColor: "#6366f1",
+        backgroundColor: "#818cf8", // indigo
       },
     ],
   };
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 p-6 space-y-10">
-      <h2 className="text-2xl font-bold mb-4">Analytics Dashboard</h2>
+    <div className="min-h-screen bg-gradient-to-br from-stone-100 via-zinc-100 to-slate-200 px-4 py-10">
+      <div className="max-w-6xl mx-auto space-y-12">
+        <h2 className="text-3xl font-bold text-neutral-700 text-center">Analytics Dashboard</h2>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Issues by Category</h3>
-        <Bar data={categoryData} />
-      </div>
+        <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-6">
+          <h3 className="text-xl font-semibold text-slate-800 mb-4">Issues by Category</h3>
+          <Bar data={categoryData} />
+        </div>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Status Breakdown</h3>
-        <Pie data={statusData} />
-      </div>
+        <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-6">
+          <h3 className="text-xl font-semibold text-slate-800 mb-4">Status Breakdown</h3>
+          <Pie data={statusData} />
+        </div>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Monthly Trends</h3>
-        <Bar data={monthlyData} />
+        <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-6">
+          <h3 className="text-xl font-semibold text-slate-800 mb-4">Monthly Trends</h3>
+          <Bar data={monthlyData} />
+        </div>
       </div>
     </div>
   );

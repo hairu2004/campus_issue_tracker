@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const Issue = require('../models/Issue'); // ✅ Needed for profile issues
+const Issue = require('../models/Issue');
 const jwt = require('jsonwebtoken');
-const verifyToken = require('../middleware/verifyToken'); // JWT middleware
+const verifyToken = require('../middleware/verifyToken');
 
 // Register
 router.post('/register', async (req, res) => {
@@ -62,15 +62,22 @@ router.post('/login', async (req, res) => {
 router.get('/me', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select('-password');
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (!user || !user.role) return res.status(404).json({ message: 'User not found or role missing' });
 
-    res.status(200).json({ user });
+    res.status(200).json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
-// ✅ Student Profile Route
+// Student Profile Route
 router.get('/profile', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select('-password');
@@ -82,7 +89,7 @@ router.get('/profile', verifyToken, async (req, res) => {
   }
 });
 
-// ✅ Google Login Route
+// Google Login Route
 router.post('/google', async (req, res) => {
   try {
     const { email, name, googleId } = req.body;
@@ -93,7 +100,7 @@ router.post('/google', async (req, res) => {
       user = new User({
         name,
         email,
-        password: googleId, // or a random string
+        password: googleId,
         role: 'student',
         isGoogleUser: true
       });

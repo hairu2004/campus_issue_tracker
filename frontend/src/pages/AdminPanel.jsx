@@ -46,51 +46,6 @@ const AdminPanel = () => {
     }
   };
 
-  const handleEdit = async (issue) => {
-    const allowedCategories = ["infrastructure", "academics", "hostel"];
-    const newTitle = prompt("Edit title:", issue.title)?.trim();
-    const newDescription = prompt("Edit description:", issue.description)?.trim();
-    const newCategory = prompt("Edit category (infrastructure, academics, hostel):", issue.category)?.toLowerCase();
-
-    if (!newTitle || !newDescription || !allowedCategories.includes(newCategory)) {
-      toast.error("Invalid input. Please use valid category and non-empty fields.");
-      return;
-    }
-
-    try {
-      const res = await axios.patch(`/issues/edit/${issue._id}`, {
-        title: newTitle,
-        description: newDescription,
-        category: newCategory,
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      toast.success("Issue updated");
-      setIssues((prev) =>
-        prev.map((i) => (i._id === issue._id ? res.data.issue : i))
-      );
-    } catch (err) {
-      toast.error("Failed to update issue");
-      console.error(err);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this issue?")) return;
-
-    try {
-      await axios.delete(`/issues/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      toast.success("Issue deleted");
-      setIssues((prev) => prev.filter((i) => i._id !== id));
-    } catch (err) {
-      toast.error("Failed to delete issue");
-      console.error(err);
-    }
-  };
-
   const filteredIssues = issues.filter((issue) => {
     const matchesSearch =
       issue.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -150,8 +105,8 @@ const AdminPanel = () => {
                 <h3 className="text-xl font-semibold text-slate-800">{issue.title}</h3>
                 <p className="text-sm text-slate-600 mt-1">{issue.description}</p>
                 <div className="mt-2 flex justify-between text-sm">
-                  <span className="text-indigo-500">Category: {issue.category}</span>
-                  <span className={`font-medium ${issue.status === "resolved" ? "text-emerald-500" : "text-amber-500"}`}>
+                  <span className="text-violet-500">Category: {issue.category}</span>
+                  <span className={`font-medium ${issue.status === "resolved" ? "text-lime-600" : "text-amber-500"}`}>
                     Status: {issue.status}
                   </span>
                 </div>
@@ -162,7 +117,7 @@ const AdminPanel = () => {
                     className="mt-4 w-48 rounded-lg shadow"
                   />
                 )}
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mt-4">
                   {issue.status !== "resolved" && (
                     <button
                       onClick={() => markResolved(issue._id)}
@@ -171,18 +126,6 @@ const AdminPanel = () => {
                       Mark as Resolved
                     </button>
                   )}
-                  <button
-                    onClick={() => handleEdit(issue)}
-                    className="bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-600 hover:to-yellow-500 text-white px-4 py-2 rounded-full transition"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(issue._id)}
-                    className="bg-gradient-to-r from-neutral-600 to-slate-700 hover:from-neutral-700 hover:to-slate-800 text-white px-4 py-2 rounded-full transition"
-                  >
-                    Delete
-                  </button>
                 </div>
               </div>
             ))}

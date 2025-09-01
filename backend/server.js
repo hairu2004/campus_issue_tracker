@@ -8,8 +8,8 @@ const app = express();
 
 // ✅ CORS Configuration
 app.use(cors({
-  origin: 'http://localhost:5173', // your frontend origin
-  credentials: true               // allow cookies/auth headers
+  origin: ['http://localhost:5173', 'https://campus-issue-tracker-frontend.onrender.com'],
+  credentials: true
 }));
 
 // ✅ Middleware

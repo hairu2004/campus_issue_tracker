@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const app = express();
 
-// ✅ CORS Configuration
+// ✅ CORS Configuration for both local and deployed frontend
 app.use(cors({
   origin: ['http://localhost:5173', 'https://campus-issue-tracker-frontend.onrender.com'],
   credentials: true
@@ -26,6 +26,11 @@ app.use('/api/issues', issueRoutes);    // e.g. /api/issues, /api/issues/stats
 // ✅ Optional: Test Route for Axios
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Backend is working!' });
+});
+
+// ✅ Friendly Root Route for Render
+app.get('/', (req, res) => {
+  res.send('Campus Issue Tracker API is live 🚀');
 });
 
 // ✅ MongoDB Connection

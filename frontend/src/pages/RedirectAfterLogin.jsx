@@ -3,18 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const RedirectAfterLogin = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user?.role) {
+    if (!loading && user?.role) {
       navigate(user.role === "admin" ? "/admin" : "/dashboard", { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, loading, navigate]);
 
   return (
     <div className="text-center mt-10 text-slate-600 text-lg">
-      Redirecting based on your role...
+      {loading ? "Loading user info..." : "Redirecting..."}
     </div>
   );
 };
